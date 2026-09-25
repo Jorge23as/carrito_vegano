@@ -1,0 +1,26 @@
+{% extends "panel_base.html" %}
+{% load formato %}
+{% block title %}Productos — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div class="cabecera">
+  <div><h1 style="font-size:23px">Productos</h1><div class="subtitulo">{{ activos }} de {{ limite }} productos activos permitidos por tu plan</div></div>
+  <a class="btn btn-primario" href="/panel/productos/nuevo/">+ Nuevo producto</a>
+</div>
+<div class="tarjeta tabla-wrap">
+  {% if productos %}<table class="tabla"><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th></th></tr>
+  {% for p in productos %}
+  <tr class="{% if not p.habilitado %}inactivo{% endif %}">
+    <td><b>{{ p.nombre }}</b></td><td>{{ p.categoria.nombre }}</td><td>{{ p.precio|clp }}</td>
+    <td>{% if p.stock_bajo %}<span class="badge badge-alerta">{{ p.stock }}</span>{% else %}{{ p.stock }}{% endif %}</td>
+    <td>{% if p.habilitado %}<span class="badge badge-ok">Activo</span>{% else %}<span class="badge badge-baja">De baja</span>{% endif %}</td>
+    <td><div class="acciones">
+      <a class="btn btn-chico" href="/panel/productos/{{ p.pk }}/editar/">Editar</a>
+      {% if p.habilitado %}
+        <form method="post" action="/panel/productos/{{ p.pk }}/baja/" onsubmit="return confirm('¿Dar de baja este producto? Se puede reactivar después.')">{% csrf_token %}<button class="btn btn-chico btn-peligro" type="submit">Dar de baja</button></form>
+      {% else %}
+        <form method="post" action="/panel/productos/{{ p.pk }}/reactivar/">{% csrf_token %}<button class="btn btn-chico" type="submit">Reactivar</button></form>
+      {% endif %}
+    </div></td>
+  </tr>{% endfor %}</table>{% else %}<div class="vacio">Aún no hay productos. Crea el primero.</div>{% endif %}
+</div>
+{% endblock %}

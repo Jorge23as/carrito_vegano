@@ -1,0 +1,15 @@
+{% extends "panel_base.html" %}
+{% block title %}Clientes — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div><h1 style="font-size:23px">Clientes</h1><div class="subtitulo">Datos personales: solo visibles para el administrador de esta tienda.</div></div>
+<div class="tarjeta tabla-wrap">
+  {% if clientes %}<table class="tabla"><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Estado</th><th></th></tr>
+  {% for c in clientes %}
+  <tr class="{% if not c.habilitado %}inactivo{% endif %}"><td><b>{{ c.nombre_completo }}</b></td><td>{{ c.email }}</td><td>{{ c.telefono|default:"—" }}</td>
+    <td>{% if c.habilitado %}<span class="badge badge-ok">Activo</span>{% else %}<span class="badge badge-baja">Baneado</span>{% endif %}</td>
+    <td><div class="acciones">
+      {% if c.habilitado %}<form method="post" action="/panel/clientes/{{ c.pk }}/baja/" onsubmit="return confirm('¿Banear a este cliente?')">{% csrf_token %}<button class="btn btn-chico btn-peligro" type="submit">Banear</button></form>
+      {% else %}<form method="post" action="/panel/clientes/{{ c.pk }}/reactivar/">{% csrf_token %}<button class="btn btn-chico" type="submit">Reactivar</button></form>{% endif %}
+    </div></td></tr>{% endfor %}</table>{% else %}<div class="vacio">Todavía no hay clientes registrados.</div>{% endif %}
+</div>
+{% endblock %}

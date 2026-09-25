@@ -1,0 +1,13 @@
+{% extends "panel_base.html" %}
+{% block title %}{{ titulo }} — {{ nombre_sitio }}{% endblock %}
+{# Formulario genérico: sirve para productos, categorías y configuración. #}
+{% block panel %}
+<div class="cabecera"><div><h1 style="font-size:23px">{{ titulo }}</h1>{% if ayuda %}<div class="subtitulo">{{ ayuda }}</div>{% endif %}</div></div>
+<div class="tarjeta anim" style="max-width:640px">
+  <form method="post" enctype="multipart/form-data" class="formulario" novalidate>
+    {% csrf_token %}
+    {% include "_campos.html" %}
+    <div style="display:flex;gap:10px"><button class="btn btn-primario" type="submit">Guardar</button><a class="btn" href="javascript:history.back()">Cancelar</a></div>
+  </form>
+</div>
+{% endblock %}

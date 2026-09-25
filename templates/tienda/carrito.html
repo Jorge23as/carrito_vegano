@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block title %}Mi carrito — {{ nombre_sitio }}{% endblock %}
+{% block content %}
+<h1 style="font-size:25px;margin-bottom:18px">Tu carrito</h1>
+{# Todos los cálculos (subtotales y total) vienen del servidor; acá solo se muestran. #}
+<div class="cols-carrito">
+  <div style="flex:1 1 480px;display:flex;flex-direction:column;gap:12px">
+    {% for item in items %}
+    <div class="tarjeta tarjeta-hover linea anim">
+      <div class="linea-img">{% if item.producto.imagen %}<img src="{{ item.producto.imagen.url }}" alt="">{% else %}🛍️{% endif %}</div>
+      <div style="flex-grow:1;min-width:0">
+        <a href="/producto/{{ item.producto.pk }}/" style="font-weight:700;color:var(--texto)">{{ item.producto.nombre }}</a>
+        <div class="ayuda">{{ item.producto.precio|clp }} c/u</div>
+        <form method="post" action="/carrito/item/{{ item.pk }}/quitar/" style="margin-top:4px">{% csrf_token %}<button class="btn-peligro" style="background:none;border:0;padding:0;font-size:12.5px;font-weight:700;color:var(--peligro);cursor:pointer" type="submit">Quitar</button></form>
+      </div>
+      <form method="post" action="/carrito/item/{{ item.pk }}/cantidad/" class="cantidad">{% csrf_token %}
+        <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.producto.stock }}" aria-label="Cantidad">
+        <button class="btn btn-chico" type="submit">OK</button>
+      </form>
+      <div style="width:90px;text-align:right;font-weight:700">{{ item.subtotal|clp }}</div>
+    </div>
+    {% empty %}
+    <div class="tarjeta vacio">Tu carrito está vacío.</div>
+    {% endfor %}
+    <a href="/" style="font-size:13.5px;font-weight:700">← Seguir comprando</a>
+  </div>
+
+  <div class="tarjeta resumen">
+    <h2 style="font-size:15px">Resumen del pedido</h2>
+    <div class="fila-resumen"><span>Subtotal</span><span style="color:var(--texto);font-weight:600">{{ total|clp }}</span></div>
+    <div style="height:1px;background:#F0F0EC"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><b>Total</b><span class="total">{{ total|clp }}</span></div>
+    <form method="post" action="/carrito/pagar/">{% csrf_token %}
+      <button class="btn btn-primario btn-bloque" style="height:48px" type="submit" {% if not items %}disabled{% endif %}>Proceder al pago</button>
+    </form>
+    <div class="ayuda" style="text-align:center">Pago simulado (proyecto académico).</div>
+  </div>
+</div>
+{% endblock %}

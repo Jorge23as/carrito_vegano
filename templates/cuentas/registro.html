@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta — {{ nombre_sitio }}{% endblock %}
+{% block body %}
+<div class="pagina-centro">
+  <div class="mancha" style="top:-80px;right:-60px;width:320px;height:320px;background:radial-gradient(circle,var(--primario-borde),transparent 70%)"></div>
+  <div class="tarjeta tarjeta-auth anim" style="max-width:520px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <a href="/" class="marca">{% include "_logo.html" %}<span class="marca-texto" style="font-size:20px">{{ nombre_sitio }}</span></a>
+      <h1 style="font-size:22px">Crea tu cuenta</h1>
+    </div>
+    <form method="post" class="formulario" novalidate>
+      {% csrf_token %}
+      {% include "_campos.html" %}
+      <button type="submit" class="btn btn-primario btn-bloque" style="height:48px">Registrarme</button>
+    </form>
+    <div style="text-align:center;font-size:13px;color:var(--suave)">¿Ya tienes cuenta? <a href="/login/" style="font-weight:700">Inicia sesión</a></div>
+  </div>
+</div>
+{% endblock %}

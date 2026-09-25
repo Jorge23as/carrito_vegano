@@ -1,0 +1,38 @@
+{% extends "panel_base.html" %}
+{% load formato %}
+{% block title %}Panel — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div class="cabecera">
+  <div><h1 style="font-size:23px">Panel de control</h1><div class="subtitulo">Resumen de {{ nombre_sitio }} · plan {{ tienda.plan.nombre }}</div></div>
+  <a class="btn btn-primario" href="/panel/productos/nuevo/">+ Nuevo producto</a>
+</div>
+
+<div class="grilla-stats">
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Ventas totales</span><span class="valor">{{ ventas_total|clp }}</span><span class="nota">{{ n_pedidos }} pedido{{ n_pedidos|pluralize }} (sin cancelados)</span></div>
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Por despachar</span><span class="valor">{{ n_por_enviar }}</span><span class="nota {% if n_por_enviar %}mal{% endif %}">pedidos pagados</span></div>
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Clientes activos</span><span class="valor">{{ n_clientes }}</span><span class="nota">registrados en la tienda</span></div>
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Quiebre de stock</span><span class="valor">{{ quiebre|length }}</span><span class="nota {% if quiebre %}mal{% endif %}">productos con ≤ {{ umbral }} u.</span></div>
+</div>
+
+<div class="dos-col">
+  <div class="tarjeta">
+    <h2 style="font-size:15px;margin-bottom:12px">Lo más vendido</h2>
+    <div class="fila-resumen" style="margin-bottom:8px"><span>Producto</span><b style="color:var(--texto)">{% if top_producto %}{{ top_producto.producto__nombre }} ({{ top_producto.u }} u.){% else %}—{% endif %}</b></div>
+    <div class="fila-resumen"><span>Categoría</span><b style="color:var(--texto)">{% if top_categoria %}{{ top_categoria.producto__categoria__nombre }} ({{ top_categoria.u }} u.){% else %}—{% endif %}</b></div>
+    <h2 style="font-size:15px;margin:18px 0 10px">Pedidos por estado</h2>
+    {% for e in por_estado %}<div class="fila-resumen"><span>{{ e.estado__nombre }}</span><b style="color:var(--texto)">{{ e.n }}</b></div>{% empty %}<div class="ayuda">Aún no hay pedidos.</div>{% endfor %}
+  </div>
+  <div class="tarjeta">
+    <h2 style="font-size:15px;margin-bottom:12px">Inventario a reponer</h2>
+    {% for p in quiebre %}
+      <div class="fila-resumen" style="padding:6px 0"><span><a href="/panel/productos/{{ p.pk }}/editar/">{{ p.nombre }}</a></span><span class="badge {% if p.stock == 0 %}badge-cancelado{% else %}badge-alerta{% endif %}">{{ p.stock }} u.</span></div>
+    {% empty %}<div class="ayuda">Todo el inventario está sobre el umbral.</div>{% endfor %}
+  </div>
+</div>
+
+<div class="tarjeta tabla-wrap">
+  <div class="cabecera" style="margin-bottom:12px"><h2 style="font-size:15px">Pedidos recientes</h2><a href="/panel/pedidos/" style="font-size:12.5px;font-weight:700">Ver todos →</a></div>
+  {% if recientes %}<table class="tabla"><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr>
+  {% for p in recientes %}<tr><td><a href="/panel/pedidos/{{ p.pk }}/">#{{ p.pk }}</a></td><td>{{ p.cliente.nombre_completo }}</td><td>{{ p.total|clp }}</td><td><span class="badge badge-{{ p.estado.codigo|lower }}">{{ p.estado.nombre }}</span></td><td>{{ p.fecha|date:"d/m H:i" }}</td></tr>{% endfor %}</table>{% else %}<div class="vacio">Sin pedidos todavía.</div>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión — {{ nombre_sitio }}{% endblock %}
+{% block body %}
+<div class="pagina-centro">
+  <div class="mancha" style="top:-80px;left:-60px;width:320px;height:320px;background:radial-gradient(circle,var(--primario-borde),transparent 70%)"></div>
+  <div class="mancha" style="bottom:-100px;right:-40px;width:380px;height:380px;background:radial-gradient(circle,var(--primario-claro),transparent 70%);animation-delay:1.5s"></div>
+  <div class="tarjeta tarjeta-auth anim">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <a href="/" class="marca">{% include "_logo.html" %}<span class="marca-texto" style="font-size:20px">{{ nombre_sitio }}</span></a>
+      <h1 style="font-size:22px">{% if tienda %}Inicia sesión{% else %}Acceso de administración{% endif %}</h1>
+    </div>
+    {% include "_mensajes.html" %}
+    <form method="post" class="formulario" novalidate>
+      {% csrf_token %}
+      {% include "_campos.html" %}
+      <button type="submit" class="btn btn-primario btn-bloque" style="height:48px">Iniciar sesión</button>
+    </form>
+    {% if tienda %}<div style="text-align:center;font-size:13px;color:var(--suave)">¿No tienes cuenta? <a href="/registro/" style="font-weight:700">Regístrate gratis</a></div>{% endif %}
+  </div>
+</div>
+{% endblock %}

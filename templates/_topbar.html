@@ -1,0 +1,26 @@
+<header class="topbar">
+  <div class="topbar-in">
+    <a href="/" class="marca">{% include "_logo.html" %}<span class="marca-texto">{{ nombre_sitio }}</span></a>
+    <nav>
+      {% if tienda %}
+        <a href="/">Catálogo</a>
+        {% if perfil.rol.codigo == ROL_CLIENTE %}
+          <a href="/carrito/">Carrito{% if cantidad_carrito %}<span class="contador">{{ cantidad_carrito }}</span>{% endif %}</a>
+          <a href="/pedidos/">Mis pedidos</a>
+        {% elif perfil.rol.codigo == ROL_ADMIN_TIENDA %}
+          <a href="/panel/">Panel de la tienda</a>
+        {% endif %}
+      {% else %}
+        <a href="/">Tiendas</a>
+        {% if perfil.rol.codigo == ROL_ADMIN_GENERAL %}<a href="/plataforma/">Panel general</a>{% endif %}
+      {% endif %}
+      {% if perfil %}
+        <span style="font-size:13px;color:var(--suave);padding:0 6px">{{ perfil.nombres }}</span>
+        <form method="post" action="/logout/" style="margin:0">{% csrf_token %}<button class="link" type="submit">Cerrar sesión</button></form>
+      {% else %}
+        <a href="/login/">Ingresar</a>
+        {% if tienda %}<a href="/registro/" class="btn btn-primario btn-chico">Crear cuenta</a>{% endif %}
+      {% endif %}
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,13 @@
+{% extends "panel_base.html" %}
+{% load formato %}
+{% block title %}Pedidos — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<h1 style="font-size:23px">Pedidos</h1>
+<div class="tarjeta tabla-wrap">
+  {% if pedidos %}<table class="tabla"><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th><th></th></tr>
+  {% for p in pedidos %}<tr><td><b>#{{ p.pk }}</b></td><td>{{ p.cliente.nombre_completo }}</td><td>{{ p.total|clp }}</td>
+    <td><span class="badge badge-{{ p.estado.codigo|lower }}">{{ p.estado.nombre }}</span></td><td>{{ p.fecha|date:"d/m/Y H:i" }}</td>
+    <td class="der"><a href="/panel/pedidos/{{ p.pk }}/">Gestionar →</a></td></tr>{% endfor %}</table>
+  {% else %}<div class="vacio">Sin pedidos todavía.</div>{% endif %}
+</div>
+{% endblock %}

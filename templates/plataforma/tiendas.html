@@ -1,0 +1,18 @@
+{% extends "panel_base.html" %}
+{% block title %}Tiendas — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div class="cabecera"><h1 style="font-size:23px">Tiendas</h1><a class="btn btn-primario" href="/plataforma/tiendas/nueva/">+ Nueva tienda</a></div>
+<div class="tarjeta tabla-wrap">
+  <table class="tabla"><tr><th>Tienda</th><th>Dirección</th><th>Plan</th><th>Administrador</th><th>Estado</th><th></th></tr>
+  {% for t in tiendas %}<tr class="{% if not t.habilitado %}inactivo{% endif %}">
+    <td><b>{{ t.nombre }}</b></td><td><a href="{{ t.url }}" target="_blank">{{ t.slug }}</a></td><td>{{ t.plan.nombre }}</td>
+    <td>{% if t.admin %}{{ t.admin.nombre_completo }}<div class="ayuda">{{ t.admin.email }}</div>{% else %}<span class="badge badge-alerta">Sin administrador</span>{% endif %}</td>
+    <td>{% if t.habilitado %}<span class="badge badge-ok">Activa</span>{% else %}<span class="badge badge-baja">Suspendida</span>{% endif %}</td>
+    <td><div class="acciones">
+      <a class="btn btn-chico" href="/plataforma/tiendas/{{ t.pk }}/reasignar-admin/">Reasignar admin</a>
+      {% if t.habilitado %}<form method="post" action="/plataforma/tiendas/{{ t.pk }}/baja/" onsubmit="return confirm('¿Suspender esta tienda? Nadie podrá entrar hasta reactivarla.')">{% csrf_token %}<button class="btn btn-chico btn-peligro" type="submit">Suspender</button></form>
+      {% else %}<form method="post" action="/plataforma/tiendas/{{ t.pk }}/reactivar/">{% csrf_token %}<button class="btn btn-chico" type="submit">Reactivar</button></form>{% endif %}
+    </div></td></tr>
+  {% empty %}<tr><td colspan="6" class="vacio">Sin tiendas.</td></tr>{% endfor %}</table>
+</div>
+{% endblock %}

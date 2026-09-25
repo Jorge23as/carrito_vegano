@@ -1,0 +1,7 @@
+{% extends "errores/base_error.html" %}
+{% block title %}403 — Acceso denegado{% endblock %}
+{% block icono %}<div class="error-icono rojo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4Z"/><path d="M9.5 9.5l5 5M14.5 9.5l-5 5" stroke-linecap="round"/></svg></div>{% endblock %}
+{% block codigo %}403{% endblock %}
+{% block titulo %}Acceso denegado{% endblock %}
+{% block detalle %}{{ mensaje|default:"Tu cuenta no tiene permisos para ver esta sección." }}{% endblock %}
+{% block extra %}<a href="/login/" class="btn">Iniciar sesión con otra cuenta</a>{% endblock %}

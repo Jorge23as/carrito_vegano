@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{# Layout con barra lateral para el admin de tienda y el admin general. #}
+{% block body %}
+<div class="layout">
+  <aside class="sidebar">
+    <a href="/" class="marca" style="padding:0 6px">{% include "_logo.html" %}<span class="marca-texto">{{ nombre_sitio }}</span></a>
+    <nav>
+      {% if perfil.rol.codigo == ROL_ADMIN_GENERAL %}
+        <a href="/plataforma/" class="{% if request.path == '/plataforma/' %}activo{% endif %}">▣ Panel general</a>
+        <a href="/plataforma/tiendas/" class="{% if request.path == '/plataforma/tiendas/' %}activo{% endif %}">◧ Tiendas</a>
+        <a href="/plataforma/tiendas/nueva/" class="{% if request.path == '/plataforma/tiendas/nueva/' %}activo{% endif %}">＋ Nueva tienda</a>
+        <a href="/api/docs/" target="_blank">⌘ API (Swagger)</a>
+        <a href="/">↗ Portada</a>
+      {% else %}
+        <a href="/panel/" class="{% if seccion == 'dashboard' %}activo{% endif %}">▣ Panel</a>
+        <a href="/panel/productos/" class="{% if seccion == 'productos' %}activo{% endif %}">◧ Productos</a>
+        <a href="/panel/categorias/" class="{% if seccion == 'categorias' %}activo{% endif %}">◫ Categorías</a>
+        <a href="/panel/pedidos/" class="{% if seccion == 'pedidos' %}activo{% endif %}">▤ Pedidos</a>
+        <a href="/panel/clientes/" class="{% if seccion == 'clientes' %}activo{% endif %}">◐ Clientes</a>
+        <a href="/panel/configuracion/" class="{% if seccion == 'configuracion' %}activo{% endif %}">⚙ Configuración</a>
+        <a href="/">↗ Ver tienda</a>
+      {% endif %}
+      <form method="post" action="/logout/" style="margin:0">{% csrf_token %}<button type="submit">⏻ Cerrar sesión</button></form>
+    </nav>
+    <div class="usuario">
+      <div class="avatar">{{ perfil.iniciales }}</div>
+      <div><div style="font-size:12.5px;font-weight:700">{{ perfil.nombre_completo }}</div><div style="font-size:11.5px;color:var(--suave)">{{ perfil.rol.nombre }}</div></div>
+    </div>
+  </aside>
+  <div class="principal">
+    {% include "_mensajes.html" %}
+    {% block panel %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block title %}Mis pedidos — {{ nombre_sitio }}{% endblock %}
+{% block content %}
+<h1 style="font-size:25px;margin-bottom:18px">Mis pedidos</h1>
+<div class="tarjeta tabla-wrap">
+  {% if pedidos %}
+  <table class="tabla">
+    <tr><th>Pedido</th><th>Fecha</th><th>Total</th><th>Estado</th><th></th></tr>
+    {% for p in pedidos %}
+    <tr><td><b>#{{ p.pk }}</b></td><td>{{ p.fecha|date:"d/m/Y H:i" }}</td><td>{{ p.total|clp }}</td>
+      <td><span class="badge badge-{{ p.estado.codigo|lower }}">{{ p.estado.nombre }}</span></td>
+      <td class="der"><a href="/pedidos/{{ p.pk }}/">Ver detalle →</a></td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<div class="vacio">Aún no tienes pedidos.</div>{% endif %}
+</div>
+{% endblock %}

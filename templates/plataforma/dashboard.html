@@ -1,0 +1,27 @@
+{% extends "panel_base.html" %}
+{% load formato %}
+{% block title %}Panel general — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div class="cabecera">
+  <div><h1 style="font-size:23px">Panel general</h1><div class="subtitulo">Visión de toda la plataforma</div></div>
+  <div style="display:flex;gap:8px">
+    <form method="post" action="/plataforma/demo/reiniciar/" onsubmit="return confirm('Esto deja la tienda demo como al inicio (borra sus datos de prueba). ¿Continuar?')">{% csrf_token %}<button class="btn" type="submit">↺ Reiniciar demo</button></form>
+    <a class="btn btn-primario" href="/plataforma/tiendas/nueva/">+ Nueva tienda</a>
+  </div>
+</div>
+<div class="grilla-stats">
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Tiendas</span><span class="valor">{{ total_tiendas }}</span><span class="nota">{{ tiendas_activas }} activa{{ tiendas_activas|pluralize }}</span></div>
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Dinero transado</span><span class="valor">{{ dinero_total|clp }}</span><span class="nota">todas las tiendas</span></div>
+  <div class="tarjeta tarjeta-hover stat anim"><span class="etiqueta">Ventas</span><span class="valor">{{ ventas_total }}</span><span class="nota">pedidos no cancelados</span></div>
+</div>
+<div class="tarjeta tabla-wrap">
+  <h2 style="font-size:15px;margin-bottom:12px">Ventas y rendimiento por tienda</h2>
+  <table class="tabla"><tr><th>Tienda</th><th>Plan</th><th>Ventas</th><th>Dinero</th><th>Tiempo de respuesta</th><th>Requests</th><th>Estado</th></tr>
+  {% for f in filas %}<tr class="{% if not f.habilitado %}inactivo{% endif %}">
+    <td><b>{{ f.nombre }}</b><div class="ayuda">{{ f.slug }}</div></td><td>{{ f.plan.nombre }}</td><td>{{ f.n_ventas }}</td><td>{{ f.dinero|clp }}</td>
+    <td>{% if f.tiempo_ms is not None %}{{ f.tiempo_ms }} ms{% else %}—{% endif %}</td><td>{{ f.n_requests }}</td>
+    <td>{% if f.habilitado %}<span class="badge badge-ok">Activa</span>{% else %}<span class="badge badge-baja">Suspendida</span>{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="7" class="vacio">Sin tiendas.</td></tr>{% endfor %}</table>
+  <p class="ayuda" style="margin-top:12px">El tiempo de respuesta es el promedio medido por el middleware en cada request de la tienda.</p>
+</div>
+{% endblock %}

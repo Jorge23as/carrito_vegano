@@ -1,0 +1,10 @@
+{% extends "panel_base.html" %}
+{% block title %}Reasignar administrador — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div><h1 style="font-size:23px">Reasignar administrador de {{ tienda_obj.nombre }}</h1><div class="subtitulo">Los administradores actuales serán dados de baja (no se borran) y se creará el nuevo.</div></div>
+<div class="tarjeta anim" style="max-width:640px">
+  <form method="post" class="formulario" novalidate>{% csrf_token %}{% include "_campos.html" %}
+    <div style="display:flex;gap:10px"><button class="btn btn-primario" type="submit">Reasignar</button><a class="btn" href="/plataforma/tiendas/">Cancelar</a></div>
+  </form>
+</div>
+{% endblock %}

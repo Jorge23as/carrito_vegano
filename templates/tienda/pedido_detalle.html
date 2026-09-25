@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block title %}Pedido #{{ pedido.pk }} — {{ nombre_sitio }}{% endblock %}
+{% block content %}
+<a href="/pedidos/" style="font-size:13.5px;font-weight:700">← Mis pedidos</a>
+<div class="tarjeta" style="margin-top:16px">
+  <div class="cabecera" style="margin-bottom:16px">
+    <div><h1 style="font-size:22px">Pedido #{{ pedido.pk }}</h1><div class="subtitulo">{{ pedido.fecha|date:"d/m/Y H:i" }}</div></div>
+    <span class="badge badge-{{ pedido.estado.codigo|lower }}">{{ pedido.estado.nombre }}</span>
+  </div>
+  <div class="tabla-wrap"><table class="tabla">
+    <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th class="der">Subtotal</th></tr>
+    {% for i in items %}<tr><td>{{ i.producto.nombre }}</td><td>{{ i.cantidad }}</td><td>{{ i.precio_unitario|clp }}</td><td class="der">{{ i.subtotal|clp }}</td></tr>{% endfor %}
+  </table></div>
+  <div style="text-align:right;margin-top:14px">Total: <span class="total">{{ pedido.total|clp }}</span></div>
+</div>
+{% endblock %}

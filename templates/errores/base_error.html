@@ -1,0 +1,24 @@
+{% load static %}<!doctype html>
+{# Base de las páginas de error. NO usa datos de la tienda ni del usuario: así funciona incluso si el error vino de la base de datos. #}
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Error{% endblock %}</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+<div class="error-pagina">
+  {% block icono %}{% endblock %}
+  <div class="error-codigo">{% block codigo %}{% endblock %}</div>
+  <div style="font-size:19px;font-weight:700">{% block titulo %}{% endblock %}</div>
+  <div style="font-size:14px;color:var(--suave);max-width:420px;line-height:1.6">{% block detalle %}{% endblock %}</div>
+  <div style="display:flex;gap:12px;margin-top:6px">
+    <a href="/" class="btn btn-primario">Volver al inicio</a>
+    {% block extra %}{% endblock %}
+  </div>
+</div>
+</body>
+</html>

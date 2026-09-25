@@ -1,0 +1,10 @@
+{% extends "panel_base.html" %}
+{% block title %}Nueva tienda — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div><h1 style="font-size:23px">Nueva tienda</h1><div class="subtitulo">Al crearla se genera automáticamente su administrador (solo de esa tienda).</div></div>
+<div class="tarjeta anim" style="max-width:640px">
+  <form method="post" class="formulario" novalidate>{% csrf_token %}{% include "_campos.html" %}
+    <div style="display:flex;gap:10px"><button class="btn btn-primario" type="submit">Crear tienda</button><a class="btn" href="/plataforma/tiendas/">Cancelar</a></div>
+  </form>
+</div>
+{% endblock %}

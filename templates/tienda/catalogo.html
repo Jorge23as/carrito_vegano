@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load formato %}
+{% block title %}{{ nombre_sitio }}{% endblock %}
+{% block content %}
+<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="cabecera">
+    <div><h1 style="font-size:26px">Catálogo</h1><div class="subtitulo">{{ productos|length }} producto{{ productos|length|pluralize }}</div></div>
+    <form method="get" class="barra-busqueda">
+      {% if categoria_id %}<input type="hidden" name="categoria" value="{{ categoria_id }}">{% endif %}
+      <input class="input" style="width:240px;height:40px" name="q" value="{{ busqueda }}" placeholder="Buscar productos…">
+      <button class="btn btn-primario" type="submit">Buscar</button>
+    </form>
+  </div>
+
+  <div class="chips">
+    <a class="chip {% if not categoria_id %}activo{% endif %}" href="/">Todos</a>
+    {% for c in categorias %}<a class="chip {% if categoria_id == c.pk|stringformat:'s' %}activo{% endif %}" href="/?categoria={{ c.pk }}">{{ c.nombre }}</a>{% endfor %}
+  </div>
+
+  {% if productos %}
+  <div class="grilla">
+    {% for p in productos %}
+    <div class="tarjeta tarjeta-hover producto anim">
+      <a href="/producto/{{ p.pk }}/" class="producto-img">{% if p.imagen %}<img src="{{ p.imagen.url }}" alt="{{ p.nombre }}">{% else %}🛍️{% endif %}</a>
+      <div class="producto-cuerpo">
+        <span class="badge" style="align-self:flex-start">{{ p.categoria.nombre }}</span>
+        <a href="/producto/{{ p.pk }}/" style="font-weight:700;color:var(--texto)">{{ p.nombre }}</a>
+        <div class="precio">{{ p.precio|clp }}</div>
+        {% if p.stock == 0 %}
+          <span class="badge badge-cancelado" style="align-self:flex-start">Agotado</span>
+        {% elif p.stock_bajo %}
+          <span class="badge badge-alerta" style="align-self:flex-start">¡Últimas {{ p.stock }}!</span>
+        {% endif %}
+        <div style="margin-top:auto;padding-top:8px">
+          {% if perfil.rol.codigo == ROL_CLIENTE %}
+            {% if p.stock > 0 %}
+            <form method="post" action="/carrito/agregar/{{ p.pk }}/">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}"><input type="hidden" name="cantidad" value="1">
+              <button class="btn btn-primario btn-bloque btn-chico" type="submit">Agregar al carrito</button>
+            </form>
+            {% endif %}
+          {% elif not perfil %}
+            <a class="btn btn-bloque btn-chico" href="/login/?next=/">Inicia sesión para comprar</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="tarjeta vacio">No hay productos que mostrar.</div>
+  {% endif %}
+</div>
+{% endblock %}

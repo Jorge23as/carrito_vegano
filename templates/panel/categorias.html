@@ -1,0 +1,16 @@
+{% extends "panel_base.html" %}
+{% block title %}Categorías — {{ nombre_sitio }}{% endblock %}
+{% block panel %}
+<div class="cabecera"><h1 style="font-size:23px">Categorías</h1><a class="btn btn-primario" href="/panel/categorias/nueva/">+ Nueva categoría</a></div>
+<div class="tarjeta tabla-wrap">
+  {% if categorias %}<table class="tabla"><tr><th>Nombre</th><th>Estado</th><th></th></tr>
+  {% for c in categorias %}
+  <tr class="{% if not c.habilitado %}inactivo{% endif %}"><td><b>{{ c.nombre }}</b></td>
+    <td>{% if c.habilitado %}<span class="badge badge-ok">Activa</span>{% else %}<span class="badge badge-baja">De baja</span>{% endif %}</td>
+    <td><div class="acciones">
+      <a class="btn btn-chico" href="/panel/categorias/{{ c.pk }}/editar/">Editar</a>
+      {% if c.habilitado %}<form method="post" action="/panel/categorias/{{ c.pk }}/baja/" onsubmit="return confirm('¿Dar de baja esta categoría?')">{% csrf_token %}<button class="btn btn-chico btn-peligro" type="submit">Dar de baja</button></form>
+      {% else %}<form method="post" action="/panel/categorias/{{ c.pk }}/reactivar/">{% csrf_token %}<button class="btn btn-chico" type="submit">Reactivar</button></form>{% endif %}
+    </div></td></tr>{% endfor %}</table>{% else %}<div class="vacio">Aún no hay categorías.</div>{% endif %}
+</div>
+{% endblock %}
